@@ -10,7 +10,7 @@
   "author": "Milan Jovanovic",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.22"
   },
   "dependencies": {
     "body-parser": "^1.20.0",
