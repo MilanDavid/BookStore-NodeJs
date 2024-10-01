@@ -7,8 +7,25 @@
   <%- include('../includes/navigation.ejs') %>
 
   <main>
-
-    <h1>Hello this is ORDERS!</h1>
+    <% if (orders.length <= 0) { %>
+    <h1>No ORDERS yet!</h1>
+    <% } else { %>
+    <ul>
+      <% orders.forEach(order => { %>
+      <li>
+        <h1># <%= order.id  %></h1>
+        <ul>
+          <% order.products.forEach(product => { %>
+          <li>
+            <p>Product: <%= product.title %></p>
+            <p>Quantity: <%= product.orderItem.quantity %></p>
+          </li>
+          <% }); %>
+        </ul>
+      </li>
+      <% }); %>
+    </ul>
+    <% } %>
 
   </main>
   <%- include('../includes/end.ejs') %>

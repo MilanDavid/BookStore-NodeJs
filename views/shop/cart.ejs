@@ -9,21 +9,26 @@
   <main>
 
     <% if (products.length > 0) { %>
-      <ul>
-        <% products.forEach((p) => { %>
-          <li>
-            <h1><%= p.productData.title %> (<%= p.qty %>)</h1>
-            <p><%= p.productData.price %></p>
-            <p><%= p.productData.description %></p>
-            <form action="/cart-detele-item" method="POST">
-              <input type="hidden" name="productId" value="<%= p.productData.id %>" />
-              <button type="submit" class="btn">Remove</button>
-            </form>
-          </li>
-        <% }) %>
-      </ul>
+    <ul class="cart__item-list">
+      <% products.forEach((product) => { %>
+      <li class="cart__item">
+        <h1><%= product.title %> (<%= product.cartItem.quantity %>)</h1>
+        <p><%= product.price %></p>
+        <form action="/cart-detele-item" method="POST">
+          <input type="hidden" name="productId" value="<%= product.id %>" />
+          <button type="submit" class="btn">Remove</button>
+        </form>
+      </li>
+      <% }) %>
+    </ul>
+    <hr />
+    <div class="centered">
+      <form action="/create-order" method="POST">
+        <button type="submit" class="btn">Order Now</button>
+      </form>
+    </div>
     <% } else { %>
-      <h1>No Products Found!</h1>
+    <h1>No Products Found!</h1>
     <% } %>
 
   </main>
