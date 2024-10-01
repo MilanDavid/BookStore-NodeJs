@@ -1,25 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
-const db = require("./util/database");
-
+const sequelize = require("./util/database");
 const path = require("path");
-const expressHbs = require("express-handlebars");
-
 const app = express();
-
-// HBS ENGINE
-// app.engine(
-//   "hbs",
-//   expressHbs({
-//     layoutsDir: "views/layouts/",
-//     defaultLayout: "main-layout",
-//     extname: "hbs",
-//   })
-// );
+const Product = require("./models/product");
+const User = require("./models/user");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -33,4 +21,14 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-app.listen(4000);
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+
+sequelize
+  .sync({ force: true })
+  .then(() => {
+    app.listen(4000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
