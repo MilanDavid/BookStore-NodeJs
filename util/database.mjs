@@ -1,10 +1,15 @@
-require("dotenv").config();
-const mongodb = require("mongodb");
+import dotenv from "dotenv";
+dotenv.config();
+import { MongoClient } from "mongodb";
 
+/**
+ * Connect to MongoDB
+ * @param {Function} callback - The callback function to execute after connection
+ */
 let _db;
 
 const mongoConnect = (callback) => {
-  mongodb.MongoClient.connect(
+  MongoClient.connect(
     `mongodb+srv://admin:${process.env.MONGODB_PASSWORD}@cluster0.c3g0q.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0`
   )
     .then((client) => {
@@ -18,6 +23,10 @@ const mongoConnect = (callback) => {
     });
 };
 
+/**
+ * Get the MongoDB database instance
+ * @returns {import('mongodb').Db} The MongoDB database instance
+ */
 const getDb = () => {
   if (_db) {
     return _db;
@@ -25,5 +34,4 @@ const getDb = () => {
   throw "No database found!";
 };
 
-exports.mongoConnect = mongoConnect;
-exports.getDb = getDb;
+export { getDb, mongoConnect };

@@ -1,4 +1,4 @@
 {
-  "exec": "node -r dotenv/config app.js",
-  "watch": ["**/*.js"]
+  "exec": "node -r dotenv/config app.mjs",
+  "watch": ["**/*.js, **/*.mjs"]
 }
