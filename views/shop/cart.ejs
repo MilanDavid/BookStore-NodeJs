@@ -12,7 +12,7 @@
     <ul class="cart__item-list">
       <% products.forEach((product) => { %>
       <li class="cart__item">
-        <h1><%= product.title %> (<%= product.cartItem.quantity %>)</h1>
+        <h1><%= product.title %> (<%= product.quantity %>)</h1>
         <p><%= product.price %></p>
         <form action="/cart-detele-item" method="POST">
           <input type="hidden" name="productId" value="<%= product._id %>" />
