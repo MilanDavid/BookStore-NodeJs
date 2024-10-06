@@ -1,4 +1,4 @@
-import { Product } from "../models/product.mjs";
+import Product from "../models/product.mjs";
 
 const AdminController = () => {
   const getAddProduct = (req, res, next) => {
@@ -31,23 +31,24 @@ const AdminController = () => {
   };
 
   const postAddProduct = (req, res, next) => {
-    console.log("[REQUEST USER]: ", req.user);
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    const product = new Product(
-      title,
-      price,
-      imageUrl,
-      description,
-      null,
-      req.user._id
-    );
-    product.save().then((result) => {
-      console.log("Created Product");
-      res.redirect("/");
-    })
+    const product = new Product({
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      description: description,
+      userId: req.user,
+    });
+    product
+      .save()
+      .then(() => {
+        console.log("Created Product");
+        res.redirect("/");
+      })
+      .catch((err) => console.log("[SAVE PRODUCT ERROR]: ", err));
   };
 
   const postEditProduct = (req, res, next) => {
@@ -56,17 +57,14 @@ const AdminController = () => {
     const updatedImageUrl = req.body.imageUrl;
     const updatedDescription = req.body.description;
     const updatedPrice = req.body.price;
-
-    const product = new Product(
-      updatedTitle,
-      updatedPrice,
-      updatedImageUrl,
-      updatedDescription,
-      prodId
-    );
-
-    return product
-      .save()
+    return Product.findById(prodId)
+      .then((product) => {
+        product.title = updatedTitle;
+        product.price = updatedPrice;
+        product.imageUrl = updatedImageUrl;
+        product.description = updatedDescription;
+        return product.save();
+      })
       .then(() => {
         res.redirect("/admin/products");
       })
@@ -74,7 +72,7 @@ const AdminController = () => {
   };
 
   const getProducts = (req, res, next) => {
-    Product.fetchAll()
+    Product.find()
       .then((products) => {
         res.render("admin/products", {
           prods: products,
@@ -87,7 +85,7 @@ const AdminController = () => {
 
   const postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
-    Product.deleteById(prodId)
+    Product.findOneAndDelete(prodId)
       .then(() => {
         res.redirect("/admin/products");
       })
