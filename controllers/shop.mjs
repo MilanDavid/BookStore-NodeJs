@@ -1,20 +1,21 @@
 import Product from "../models/product.mjs";
 import Order from "../models/order.mjs";
 
-const ShopController = () => {
-  const getProducts = (req, res, next) => {
+const ShopController = {
+  getProducts: (req, res, next) => {
     Product.find()
       .then((products) => {
         res.render("shop/product-list", {
           prods: products,
           pageTitle: "All Products",
           path: "/products",
+          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FETCH ALL ERROR]: ", err));
-  };
+  },
 
-  const getProduct = (req, res, next) => {
+  getProduct: (req, res, next) => {
     const prodId = req.params.productId;
     Product.findById(prodId)
       .then((product) => {
@@ -22,24 +23,26 @@ const ShopController = () => {
           product: product,
           pageTitle: product.title,
           path: "/products",
+          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
-  };
+  },
 
-  const getIndex = (req, res, next) => {
+  getIndex: (req, res, next) => {
     Product.find()
       .then((products) => {
         res.render("shop/index", {
           prods: products,
           pageTitle: "Shop",
           path: "/",
+          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FETCH ALL ERROR]: ", err));
-  };
+  },
 
-  const getCart = (req, res, next) => {
+  getCart: (req, res, next) => {
     req.user
       .populate("cart.items.productId")
       .then((user) => {
@@ -48,12 +51,13 @@ const ShopController = () => {
           pageTitle: "Cart",
           path: "/cart",
           products: products,
+          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[GET PRODUCTS ERROR]: ", err));
-  };
+  },
 
-  const postCart = (req, res, next) => {
+  postCart: (req, res, next) => {
     const prodId = req.body.productId;
     Product.findById(prodId)
       .then((product) => {
@@ -63,9 +67,9 @@ const ShopController = () => {
         res.redirect("/cart");
       })
       .catch((err) => console.log("[ADD TO CART ERROR]: ", err));
-  };
+  },
 
-  const postCartDeleteItem = (req, res, next) => {
+  postCartDeleteItem: (req, res, next) => {
     const prodId = req.body.productId;
     req.user
       .deleteCartItem(prodId)
@@ -73,9 +77,9 @@ const ShopController = () => {
         res.redirect("/cart");
       })
       .catch((err) => console.log("[GET CART ERROR]: ", err));
-  };
+  },
 
-  const postOrder = (req, res, next) => {
+  postOrder: (req, res, next) => {
     req.user
       .populate("cart.items.productId")
       .then((user) => {
@@ -100,30 +104,20 @@ const ShopController = () => {
         res.redirect("/orders");
       })
       .catch((err) => console.log("[GET CART ERROR]: ", err));
-  };
+  },
 
-  const getOrders = (req, res, next) => {
+  getOrders: (req, res, next) => {
     Order.find({ "user.userId": req.user._id })
       .then((orders) => {
         res.render("shop/orders", {
           path: "/orders",
           pageTitle: "Your Orders",
           orders: orders,
+          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[GET ORDERS ERROR]: ", err));
-  };
-
-  return {
-    getProducts,
-    getProduct,
-    getIndex,
-    getCart,
-    postCart,
-    postCartDeleteItem,
-    postOrder,
-    getOrders,
-  };
+  },
 };
 
 export default ShopController;

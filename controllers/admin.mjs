@@ -1,15 +1,16 @@
 import Product from "../models/product.mjs";
 
-const AdminController = () => {
-  const getAddProduct = (req, res, next) => {
+const AdminController = {
+  getAddProduct: (req, res, next) => {
     res.render("admin/edit-product", {
       pageTitle: "Add Product",
       path: "/admin/add-product",
       editing: false,
+      isAuthenticated: req.session.isLoggedIn,
     });
-  };
+  },
 
-  const getEditProduct = (req, res, next) => {
+  getEditProduct: (req, res, next) => {
     const editMode = req.query.edit;
     if (!editMode) {
       return res.redirect("/");
@@ -25,12 +26,13 @@ const AdminController = () => {
           path: "/admin/edit-product",
           editing: editMode,
           product: product,
+          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
-  };
+  },
 
-  const postAddProduct = (req, res, next) => {
+  postAddProduct: (req, res, next) => {
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
@@ -49,9 +51,9 @@ const AdminController = () => {
         res.redirect("/");
       })
       .catch((err) => console.log("[SAVE PRODUCT ERROR]: ", err));
-  };
+  },
 
-  const postEditProduct = (req, res, next) => {
+  postEditProduct: (req, res, next) => {
     const prodId = req.body.productId;
     const updatedTitle = req.body.title;
     const updatedImageUrl = req.body.imageUrl;
@@ -69,37 +71,29 @@ const AdminController = () => {
         res.redirect("/admin/products");
       })
       .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
-  };
+  },
 
-  const getProducts = (req, res, next) => {
+  getProducts: (req, res, next) => {
     Product.find()
       .then((products) => {
         res.render("admin/products", {
           prods: products,
           pageTitle: "Admin Products",
           path: "/admin/products",
+          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FETCH ALL ERROR]: ", err));
-  };
+  },
 
-  const postDeleteProduct = (req, res, next) => {
+  postDeleteProduct: (req, res, next) => {
     const prodId = req.body.productId;
     Product.findOneAndDelete(prodId)
       .then(() => {
         res.redirect("/admin/products");
       })
       .catch((err) => console.log("[DELETE BY ID ERROR]: ", err));
-  };
-
-  return {
-    getAddProduct,
-    getEditProduct,
-    postAddProduct,
-    postEditProduct,
-    getProducts,
-    postDeleteProduct,
-  };
+  },
 };
 
 export default AdminController;
