@@ -11,6 +11,8 @@ import session from "express-session";
 import { fileURLToPath } from "url";
 import User from "./models/user.mjs";
 import connectMongodbSession from "connect-mongodb-session";
+import csurf from "csurf";
+import flash from "connect-flash";
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +22,7 @@ const __dirname = path.dirname(__filename);
 const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_DATABASE}?${process.env.MONGODB_OPTIONS}`;
 const app = express();
 const MongoDbStore = connectMongodbSession(session);
+const csrfProtection = csurf();
 
 const store = new MongoDbStore({
   uri: MONGODB_URI,
@@ -39,6 +42,8 @@ app.use(
     store: store,
   })
 );
+app.use(csrfProtection);
+app.use(flash());
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -52,6 +57,12 @@ app.use((req, res, next) => {
     .catch((err) => console.log("[APP USER MIDDLEWARE]: ", err));
 });
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
@@ -60,18 +71,6 @@ app.use(get404);
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "Milan",
-          email: "miland.sm@gmail.com",
-          cart: {
-            items: [],
-          },
-        });
-        user.save();
-      }
-    });
     console.log("Connected!");
     app.listen(3000);
   })

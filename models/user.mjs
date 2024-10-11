@@ -14,14 +14,11 @@ const cartSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
   },
+  password: { type: String, required: true },
   cart: cartSchema,
 });
 
@@ -64,7 +61,7 @@ userSchema.methods.deleteCartItem = function (productId) {
   return this.save();
 };
 
-userSchema.methods.clearCart = function() {
+userSchema.methods.clearCart = function () {
   this.cart = { items: [] };
   return this.save();
 };

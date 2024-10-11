@@ -120,3 +120,18 @@ main {
   background-color: #00695c;
   color: white;
 }
+
+.user-message {
+  margin: auto;
+  width: 30%;
+  padding: 1rem;
+  border: 1px solid #4771fa;
+  background-color: #7f8ec1;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.user-message--error {
+  background: #d32f2f;
+  border-color: #bc6e6e;
+}

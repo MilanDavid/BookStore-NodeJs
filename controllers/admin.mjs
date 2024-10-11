@@ -6,7 +6,6 @@ const AdminController = {
       pageTitle: "Add Product",
       path: "/admin/add-product",
       editing: false,
-      isAuthenticated: req.session.isLoggedIn,
     });
   },
 
@@ -26,7 +25,6 @@ const AdminController = {
           path: "/admin/edit-product",
           editing: editMode,
           product: product,
-          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
@@ -80,7 +78,6 @@ const AdminController = {
           prods: products,
           pageTitle: "Admin Products",
           path: "/admin/products",
-          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FETCH ALL ERROR]: ", err));

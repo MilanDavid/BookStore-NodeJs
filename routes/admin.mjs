@@ -1,18 +1,19 @@
 import express from "express";
 import AdminController from "../controllers/admin.mjs";
+import { isAuth } from "../middleware/is-auth.mjs";
 
 const router = express.Router();
 
-router.get("/add-product", AdminController.getAddProduct);
+router.get("/add-product", isAuth, AdminController.getAddProduct);
 
-router.post("/add-product", AdminController.postAddProduct);
+router.post("/add-product", isAuth, AdminController.postAddProduct);
 
-router.get("/products", AdminController.getProducts);
+router.get("/products", isAuth, AdminController.getProducts);
 
-router.get("/edit-product/:productId", AdminController.getEditProduct);
+router.get("/edit-product/:productId", isAuth, AdminController.getEditProduct);
 
-router.post("/edit-product", AdminController.postEditProduct);
+router.post("/edit-product", isAuth, AdminController.postEditProduct);
 
-router.post("/delete-product", AdminController.postDeleteProduct);
+router.post("/delete-product", isAuth, AdminController.postDeleteProduct);
 
 export default router;

@@ -9,7 +9,6 @@ const ShopController = {
           prods: products,
           pageTitle: "All Products",
           path: "/products",
-          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FETCH ALL ERROR]: ", err));
@@ -23,7 +22,6 @@ const ShopController = {
           product: product,
           pageTitle: product.title,
           path: "/products",
-          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
@@ -36,7 +34,6 @@ const ShopController = {
           prods: products,
           pageTitle: "Shop",
           path: "/",
-          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[FETCH ALL ERROR]: ", err));
@@ -51,7 +48,6 @@ const ShopController = {
           pageTitle: "Cart",
           path: "/cart",
           products: products,
-          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[GET PRODUCTS ERROR]: ", err));
@@ -91,7 +87,7 @@ const ShopController = {
             };
           }),
           user: {
-            name: req.user.name,
+            email: req.user.email,
             userId: req.user,
           },
         });
@@ -113,7 +109,6 @@ const ShopController = {
           path: "/orders",
           pageTitle: "Your Orders",
           orders: orders,
-          isAuthenticated: req.session.isLoggedIn,
         });
       })
       .catch((err) => console.log("[GET ORDERS ERROR]: ", err));
