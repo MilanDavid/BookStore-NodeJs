@@ -13,6 +13,7 @@ import User from "./models/user.mjs";
 import connectMongodbSession from "connect-mongodb-session";
 import csurf from "csurf";
 import flash from "connect-flash";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
@@ -23,6 +24,15 @@ const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env
 const app = express();
 const MongoDbStore = connectMongodbSession(session);
 const csrfProtection = csurf();
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.ethereal.email',
+  port: 587,
+  auth: {
+      user: 'fredrick.frami@ethereal.email',
+      pass: 'hZQN6cBFsn28SYD345'
+  }
+});
 
 const store = new MongoDbStore({
   uri: MONGODB_URI,

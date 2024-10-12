@@ -1,5 +1,6 @@
 import User from "../models/user.mjs";
 import bcrypt from "bcryptjs";
+import { emailtransporter } from "../util/emailtransporter.mjs";
 
 const AuthController = {
   getLogin: (req, res) => {
@@ -91,8 +92,16 @@ const AuthController = {
             });
             return user.save();
           })
-          .then(() => {
+          .then((result) => {
             res.redirect("/login");
+            return emailtransporter
+              .sendMail({
+                to: email,
+                from: "fredrick.frami@ethereal.email",
+                subject: "Signup succeeded!",
+                html: "<h1>You successfully signed up!</h1>",
+              })
+              .catch((err) => console.log("[SEND MAIL ERROR]: ", err));
           })
           .catch((err) => console.log("[HASH PASSWORD ERROR]: ", err));
       })
