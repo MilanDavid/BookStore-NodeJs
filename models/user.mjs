@@ -19,6 +19,8 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   password: { type: String, required: true },
+  resetToken: String,
+  resetTokenExpiration: Date,
   cart: cartSchema,
 });
 

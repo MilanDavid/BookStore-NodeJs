@@ -20,6 +20,9 @@ const AdminController = {
         if (!product) {
           return res.redirect("/");
         }
+        if (product.userId.toString() !== req.user._id.toString()) {
+          return res.redirect("/");
+        }
         res.render("admin/edit-product", {
           pageTitle: "Edit Product",
           path: "/admin/edit-product",
@@ -59,20 +62,27 @@ const AdminController = {
     const updatedPrice = req.body.price;
     return Product.findById(prodId)
       .then((product) => {
+        if (product.userId.toString() !== req.user._id.toString()) {
+          return res.redirect("/");
+        }
         product.title = updatedTitle;
         product.price = updatedPrice;
         product.imageUrl = updatedImageUrl;
         product.description = updatedDescription;
-        return product.save();
-      })
-      .then(() => {
-        res.redirect("/admin/products");
+        return product
+          .save()
+          .then(() => {
+            res.redirect("/admin/products");
+          })
+          .catch((err) => console.log("[SAVE PRODUCT ERROR]: ", err));
       })
       .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
   },
 
   getProducts: (req, res, next) => {
-    Product.find()
+    Product.find({
+      userId: req.user._id,
+    })
       .then((products) => {
         res.render("admin/products", {
           prods: products,
@@ -85,7 +95,7 @@ const AdminController = {
 
   postDeleteProduct: (req, res, next) => {
     const prodId = req.body.productId;
-    Product.findOneAndDelete(prodId)
+    Product.deleteOne({ _id: prodId, userId: req.user._id })
       .then(() => {
         res.redirect("/admin/products");
       })
