@@ -37,6 +37,7 @@ const AdminController = {
           path: "/admin/edit-product",
           editing: editMode,
           product: product,
+          validationErrors: [],
         });
       })
       .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
