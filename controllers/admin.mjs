@@ -85,8 +85,6 @@ const AdminController = {
   postEditProduct: (req, res, next) => {
     const errors = validationResult(req);
 
-    console.log("[ERROR]: ", errors.array());
-
     if (!errors.isEmpty()) {
       return res.status(422).render("admin/edit-product", {
         pageTitle: "Edit Product",
