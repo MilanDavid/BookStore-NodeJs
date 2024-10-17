@@ -23,7 +23,29 @@ router.get("/products", isAuth, AdminController.getProducts);
 
 router.get("/edit-product/:productId", isAuth, AdminController.getEditProduct);
 
-router.post("/edit-product", isAuth, AdminController.postEditProduct);
+router.post(
+  "/edit-product",
+  isAuth,
+  [
+    validator.body("title").isString().isLength({ min: 3 }).trim(),
+    validator.body("imageUrl").isURL(),
+    validator.body("price").isFloat(),
+    validator.body("description").isLength({ min: 5, max: 400 }).trim(),
+  ],
+  AdminController.postEditProduct
+);
+
+router.post(
+  "/edit-product",
+  isAuth,
+  [
+    validator.body("title").isString().isLength({ min: 3 }).trim(),
+    validator.body("imageUrl").isURL(),
+    validator.body("price").isFloat(),
+    validator.body("description").isLength({ min: 5, max: 400 }).trim(),
+  ],
+  AdminController.postEditProduct
+);
 
 router.post("/delete-product", isAuth, AdminController.postDeleteProduct);
 

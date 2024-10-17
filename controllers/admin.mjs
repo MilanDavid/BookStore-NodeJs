@@ -83,6 +83,27 @@ const AdminController = {
   },
 
   postEditProduct: (req, res, next) => {
+    const errors = validationResult(req);
+
+    console.log("[ERROR]: ", errors.array());
+
+    if (!errors.isEmpty()) {
+      return res.status(422).render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: true,
+        product: {
+          _id: req.body.productId,
+          title: req.body.title,
+          imageUrl: req.body.imageUrl,
+          price: req.body.price,
+          description: req.body.description,
+        },
+        errorMessage: errors.array()[0].msg,
+        validationErrors: errors.array(),
+      });
+    }
+
     const prodId = req.body.productId;
     const updatedTitle = req.body.title;
     const updatedImageUrl = req.body.imageUrl;
