@@ -7,6 +7,7 @@ const AdminController = {
       pageTitle: "Add Product",
       path: "/admin/add-product",
       editing: false,
+      hasError: false,
       errorMessage: "",
       validationErrors: [],
       product: {
@@ -36,11 +37,17 @@ const AdminController = {
           pageTitle: "Edit Product",
           path: "/admin/edit-product",
           editing: editMode,
+          hasError: false,
           product: product,
           validationErrors: [],
         });
       })
-      .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   postAddProduct: (req, res, next) => {
@@ -51,6 +58,7 @@ const AdminController = {
         pageTitle: "Add Product",
         path: "/admin/add-product",
         editing: false,
+        hasError: false,
         product: {
           title: req.body.title,
           imageUrl: req.body.imageUrl,
@@ -79,7 +87,12 @@ const AdminController = {
         console.log("Created Product");
         res.redirect("/");
       })
-      .catch((err) => console.log("[SAVE PRODUCT ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   postEditProduct: (req, res, next) => {
@@ -121,9 +134,19 @@ const AdminController = {
           .then(() => {
             res.redirect("/admin/products");
           })
-          .catch((err) => console.log("[SAVE PRODUCT ERROR]: ", err));
+          .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+
+            return next(error);
+          });
       })
-      .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   getProducts: (req, res, next) => {
@@ -137,7 +160,12 @@ const AdminController = {
           path: "/admin/products",
         });
       })
-      .catch((err) => console.log("[FETCH ALL ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   postDeleteProduct: (req, res, next) => {
@@ -146,7 +174,12 @@ const AdminController = {
       .then(() => {
         res.redirect("/admin/products");
       })
-      .catch((err) => console.log("[DELETE BY ID ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 };
 

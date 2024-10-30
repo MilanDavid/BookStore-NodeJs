@@ -11,7 +11,12 @@ const ShopController = {
           path: "/products",
         });
       })
-      .catch((err) => console.log("[FETCH ALL ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   getProduct: (req, res, next) => {
@@ -24,7 +29,12 @@ const ShopController = {
           path: "/products",
         });
       })
-      .catch((err) => console.log("[FIND BY ID ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   getIndex: (req, res, next) => {
@@ -36,7 +46,12 @@ const ShopController = {
           path: "/",
         });
       })
-      .catch((err) => console.log("[FETCH ALL ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   getCart: (req, res, next) => {
@@ -50,7 +65,12 @@ const ShopController = {
           products: products,
         });
       })
-      .catch((err) => console.log("[GET PRODUCTS ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   postCart: (req, res, next) => {
@@ -62,7 +82,12 @@ const ShopController = {
       .then(() => {
         res.redirect("/cart");
       })
-      .catch((err) => console.log("[ADD TO CART ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   postCartDeleteItem: (req, res, next) => {
@@ -72,7 +97,12 @@ const ShopController = {
       .then(() => {
         res.redirect("/cart");
       })
-      .catch((err) => console.log("[GET CART ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   postOrder: (req, res, next) => {
@@ -99,7 +129,12 @@ const ShopController = {
       .then(() => {
         res.redirect("/orders");
       })
-      .catch((err) => console.log("[GET CART ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   getOrders: (req, res, next) => {
@@ -111,7 +146,12 @@ const ShopController = {
           orders: orders,
         });
       })
-      .catch((err) => console.log("[GET ORDERS ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 };
 

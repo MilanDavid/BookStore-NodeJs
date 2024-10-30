@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin.mjs";
 import authRoutes from "./routes/auth.mjs";
 import shopRoutes from "./routes/shop.mjs";
-import get404 from "./controllers/error.mjs";
+import ErrorHandling from "./controllers/error.mjs";
 import path from "path";
 import mongoose from "mongoose";
 import session from "express-session";
@@ -26,12 +26,12 @@ const MongoDbStore = connectMongodbSession(session);
 const csrfProtection = csurf();
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
+  host: "smtp.ethereal.email",
   port: 587,
   auth: {
-      user: 'fredrick.frami@ethereal.email',
-      pass: 'hZQN6cBFsn28SYD345'
-  }
+    user: "fredrick.frami@ethereal.email",
+    pass: "hZQN6cBFsn28SYD345",
+  },
 });
 
 const store = new MongoDbStore({
@@ -61,10 +61,15 @@ app.use((req, res, next) => {
   }
   User.findById(req.session.user._id)
     .then((user) => {
+      if (!user) {
+        return next();
+      }
       req.user = user;
       next();
     })
-    .catch((err) => console.log("[APP USER MIDDLEWARE]: ", err));
+    .catch((err) => {
+      throw new Error(err);
+    });
 });
 
 app.use((req, res, next) => {
@@ -76,7 +81,17 @@ app.use((req, res, next) => {
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
-app.use(get404);
+app.get("/500", ErrorHandling.get500);
+
+app.use(ErrorHandling.get404);
+
+app.use((error, req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "Server Error!",
+    path: "/500",
+    isAuthenticated: req.session.isLoggedIn,
+  });
+});
 
 mongoose
   .connect(MONGODB_URI)

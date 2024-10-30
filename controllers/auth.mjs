@@ -87,7 +87,12 @@ const AuthController = {
             res.redirect("/");
           });
       })
-      .catch((err) => console.log("[COMPARE PASSWORD ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   postLogout: (req, res) => {
@@ -155,9 +160,19 @@ const AuthController = {
             subject: "Signup succeeded!",
             html: "<h1>You successfully signed up!</h1>",
           })
-          .catch((err) => console.log("[SEND MAIL ERROR]: ", err));
+          .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+    
+            return next(error);
+          });
       })
-      .catch((err) => console.log("[HASH PASSWORD ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 
   getResetPassword: (req, res, next) => {
@@ -204,9 +219,19 @@ const AuthController = {
                 <p>Click this <a href="http://localhost:3000/new-password/${token}">link</a> to set a new password.</p>
               `,
             })
-            .catch((err) => console.log("[SEND MAIL ERROR]: ", err));
+            .catch((err) => {
+              const error = new Error(err);
+              error.httpStatusCode = 500;
+      
+              return next(error);
+            });
         })
-        .catch((err) => console.log("[SAVE USER ERROR]: ", err));
+        .catch((err) => {
+          const error = new Error(err);
+          error.httpStatusCode = 500;
+
+          return next(error);
+        });
     });
   },
 
@@ -269,7 +294,12 @@ const AuthController = {
       .then((result) => {
         res.redirect("/login");
       })
-      .catch((err) => console.log("[UPDATE PASSWORD ERROR]: ", err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+
+        return next(error);
+      });
   },
 };
 
